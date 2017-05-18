@@ -201,8 +201,9 @@ class Eggs extends GameObject {
     if ( pos.y < tar.y) {
       pos.y += vertSpeed;
       vertSpeed += gavForce;
-    } else if ( random(0,1) < 0.1f) {
+    } else if ( random(0, 1) < 0.1f) {
       bgAssets.add(new Chicks(pos.x, pos.y, size));
+      bgAssets.add(new Expl(pos.x, pos.y));
       assets.remove(this);
     }
   }
@@ -245,5 +246,55 @@ class Chicks extends GameObject {
   void render() {
     fill(bird);
     ellipse(pos.x, pos.y, size, size);
+  }
+}
+
+
+color red = color(255, 0, 0), yellow = color (255, 255, 0);
+
+class Expl extends GameObject {
+
+  float rad =0, radSm= rad/2, teta, cx, cy;
+  int explCount =5;
+
+  Expl(float x, float y) {
+
+    super(x, y);
+  }
+  float timer=0;
+  void update() {
+    timer ++;
+    if (timer < 30) {
+      rad ++; 
+      radSm= rad/2;
+    }
+
+    if (timer > 15 && timer < 60) {
+      rad --; 
+      radSm= rad/2;
+    }
+    if (timer > 30 || rad < 0) {
+      bgAssets.remove(this);
+    }
+    
+    println(rad);
+  }
+
+  void render() {
+
+    ellipse(pos.x, pos.y, rad, rad);
+    for ( int i =0; i < explCount; i ++) {
+
+      cx = pos.x + sin(teta) * rad;
+      cy = pos.y + cos(teta) * rad;
+      radSm = random(10, 25);
+      if ( random(0, 1) > 0.5f) {
+        fill(red);
+      } else {
+        fill(yellow);
+      }
+      ellipse(cx, cy, radSm, radSm);
+      teta += random(0.01f, 1f);
+    }
   }
 }
