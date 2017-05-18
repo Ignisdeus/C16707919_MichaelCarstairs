@@ -1,12 +1,20 @@
+
+// perent Class only background not using this as a perent 
 class GameObject {
 
   PVector pos, tar, stem;
   float speed, size; 
-  color leafs, bird = color(255, 0, 0), trunk = color (200, 150, 200);
+  color  bird = color(255, 0, 0), trunk = color (200, 150, 200);
 
   GameObject(float x, float y) {
 
     pos = new PVector(x, y);
+  }
+
+  GameObject(float x, float y, float size) {
+
+    pos = new PVector(x, y);
+    this.size = size;
   }
 
   void update() {
@@ -15,7 +23,7 @@ class GameObject {
   void render() {
   }
 }
-
+// birds implmaented using GameObject as a perent 
 class Birds extends GameObject {
 
   boolean right;
@@ -27,9 +35,8 @@ class Birds extends GameObject {
     this.speed = speed; 
     size= 25;
 
-    int dice = (int)random(0, 2);
+    if ( random(0, 1) > 0.5f) {
 
-    if ( dice == 0) {
       right = true;
     } else {
 
@@ -63,12 +70,13 @@ class Birds extends GameObject {
     }
   }
 }
-
+// trees implmented using the GameObjects class as a perent 
 class Trees extends GameObject {
 
   float growth, growthRate = 5.0f, trunkSize = 0;
   int lefeCount = (int)random(3, 8);
   PVector[] lefePos = new PVector[lefeCount];
+  color leafs;
 
   Trees(float x, float y, float growFactor) {
 
@@ -96,6 +104,9 @@ class Trees extends GameObject {
         theta += pointGen;
       }
     }
+
+    if ( random(0, 1) > 0.5f) {
+    }
   }
 
   void render() {
@@ -107,8 +118,62 @@ class Trees extends GameObject {
     ellipse(tar.x, tar.y, size, size);
 
     for (int i =0; i< lefePos.length; i++) {
-     
+
       ellipse(lefePos[i].x, lefePos[i].y, size/2, size/2);
+
+      if ( random(0, 1f) < 0.01f) {
+        assets.add(new FallingLeves(lefePos[i].x, lefePos[i].y, size * 0.2f, this.leafs));
+      }
     }
+  }
+}
+
+class FallingLeves extends GameObject {
+
+
+  float termVol = 5.0f, windSpeed = 2f;
+  color myColor;
+  FallingLeves(float x, float y, float size, color c) {
+
+    super(x, y, size); 
+    speed =0;
+    myColor = c;
+    tar = new PVector(pos.x, pos.y + random(50, 100));
+  }
+
+  void update() {
+
+    // due to light ait gravity whont have as high and effect :) 
+    if ( speed < termVol) {
+      speed += gavForce/ 4;
+    }
+
+
+
+
+
+
+    if ( pos.y < tar.y) {
+      pos.y += speed;
+      if ( windDir) {
+
+        pos.x+= windSpeed;
+      } else {
+        pos.x-= windSpeed;
+      }
+    } else {
+
+      size -= 0.1f;
+    }
+
+    if (size < 0 ) {
+      assets.remove(this);
+    }
+  }
+
+
+  void render() {
+    fill(myColor);
+    ellipse(pos.x, pos.y, size, size);
   }
 }

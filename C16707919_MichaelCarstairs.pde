@@ -1,5 +1,8 @@
 //C16707919 
 //Michael Carstairs
+
+// the force of gravity
+float gavForce= 0.98;
 boolean canCall = true, canPlant = true;
 ArrayList<GameObject> assets= new ArrayList<GameObject>();
 void setup() {
@@ -18,9 +21,15 @@ void backGround() {
   fill(ground);
   rect(0, height/2, width, height/2);
 }
-
+Boolean windDir;
 void draw() {
   backGround();
+
+  if ( random(0, 1f) > 0.1f) {
+      windDir =true;
+  }else{
+   windDir =false; 
+  }
 
   // draw form the array list 
   for (int i = 0; i < assets.size(); i ++) {
@@ -36,12 +45,12 @@ void draw() {
       assets.add(new Birds(mouseX, mouseY, 5.0f));
     }
   }
-  if( mouseY > height/2){
-  if (mousePressed && canPlant == true) {
-    canPlant = false;
-    canCall = false;
-    assets.add(new Trees(mouseX, mouseY, random(50, 100)));
-  }
+  if ( mouseY > height/2) {
+    if (mousePressed && canPlant == true) {
+      canPlant = false;
+      canCall = false;
+      assets.add(new Trees(mouseX, mouseY, random(50, 100)));
+    }
   }
 
   if (!mousePressed) {
