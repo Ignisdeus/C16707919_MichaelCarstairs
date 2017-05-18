@@ -43,7 +43,7 @@ class Birds extends GameObject {
 
       right = false;
     }
-    if ( random(0, 1) > 0.1f) {
+    if ( random(0, 1) < 0.1f) {
       canLay =true;
     }
   }
@@ -185,7 +185,7 @@ class FallingLeves extends GameObject {
     ellipse(pos.x, pos.y, size, size);
   }
 }
-// 10 % that a bird can lay an egg
+// 9-10 % that a bird can lay an egg
 class Eggs extends GameObject {
 
   float vertSpeed;
@@ -213,7 +213,8 @@ class Eggs extends GameObject {
     ellipse(pos.x, pos.y, size, size* 1.5f);
   }
 }
-
+// Chicks emerge form the explosion of the cracked eggs 
+// They then move ether left for right randomly to the edge of the screen and then turn back to go the other way in an endless loops :) 
 class Chicks extends GameObject {
 
   boolean right;
@@ -251,7 +252,7 @@ class Chicks extends GameObject {
 
 
 color red = color(255, 0, 0), yellow = color (255, 255, 0);
-
+// Added explosiong ( Bryan "I want Explosions") :) 
 class Expl extends GameObject {
 
   float rad =0, radSm= rad/2, teta, cx, cy;
