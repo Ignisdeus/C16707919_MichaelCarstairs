@@ -24,6 +24,7 @@ class GameObject {
   }
 }
 // birds implmaented using GameObject as a perent 
+boolean canLay = false;
 class Birds extends GameObject {
 
   boolean right;
@@ -42,6 +43,9 @@ class Birds extends GameObject {
 
       right = false;
     }
+    if ( random(0, 1) > 0.1f) {
+      canLay =true;
+    }
   }
 
   void update() {
@@ -55,6 +59,13 @@ class Birds extends GameObject {
     if ( pos.x < 0 - size/2 || pos.x > width + size/2) {
       birdCount --;
       assets.remove(this);
+    }
+
+    if (canLay) {
+      if ( random(0, 1) > 0.25f) {
+        canLay =false;
+        assets.add(new Eggs(pos.x, pos.y, size/2));
+      }
     }
   }
 
@@ -92,7 +103,7 @@ class Trees extends GameObject {
     if (trunkSize < growth) {
       trunkSize += growthRate;
       tar = new PVector(pos.x, pos.y - trunkSize);
-      println(tar);
+      // println(tar);
 
       float pointGen = TWO_PI / lefePos.length, theta=0, cx, cy;
       for (int i =0; i < lefePos.length; i ++) {
@@ -128,6 +139,8 @@ class Trees extends GameObject {
   }
 }
 
+// added falling leves that react to a wind direction and gravity 
+
 class FallingLeves extends GameObject {
 
 
@@ -138,7 +151,7 @@ class FallingLeves extends GameObject {
     super(x, y, size); 
     speed =0;
     myColor = c;
-    tar = new PVector(pos.x, pos.y + random(50, 100));
+    tar = new PVector(pos.x, pos.y + random(100, 150));
   }
 
   void update() {
@@ -147,11 +160,6 @@ class FallingLeves extends GameObject {
     if ( speed < termVol) {
       speed += gavForce/ 4;
     }
-
-
-
-
-
 
     if ( pos.y < tar.y) {
       pos.y += speed;
@@ -174,6 +182,68 @@ class FallingLeves extends GameObject {
 
   void render() {
     fill(myColor);
+    ellipse(pos.x, pos.y, size, size);
+  }
+}
+// 10 % that a bird can lay an egg
+class Eggs extends GameObject {
+
+  float vertSpeed;
+
+  Eggs(float x, float y, float size) {
+
+    super(x, y, size); 
+    tar = new PVector(pos.x, random(height/2, height - size * 3));
+  }
+
+  void update() {
+
+    if ( pos.y < tar.y) {
+      pos.y += vertSpeed;
+      vertSpeed += gavForce;
+    } else if ( random(0,1) < 0.1f) {
+      bgAssets.add(new Chicks(pos.x, pos.y, size));
+      assets.remove(this);
+    }
+  }
+
+  void render() {
+    fill(255);
+    ellipse(pos.x, pos.y, size, size* 1.5f);
+  }
+}
+
+class Chicks extends GameObject {
+
+  boolean right;
+  Chicks(float x, float y, float size) {
+
+    super(x, y, size);
+    speed = 0.2f;
+
+    if ( random( 0, 1) > 0.5f) {
+      right = true;
+    } else {
+
+      right = false;
+    }
+  }
+
+  void update() {
+
+    if ( right) {
+      pos.x += speed;
+    } else {
+      pos.x -= speed;
+    }
+
+    if ( pos.x < 0 + size || pos.x > width -size) {
+      right = ! right;
+    }
+  }
+
+  void render() {
+    fill(bird);
     ellipse(pos.x, pos.y, size, size);
   }
 }
